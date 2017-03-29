@@ -43,8 +43,7 @@ class Fs {
       }).then(files => {
         for (let file of files) {
           file.dest = path.win32.normalize(dest);
-          const destination = this.destinationFromFile(file);
-          promises.push(this.write(file, file.destination));
+          promises.push(this.write(file, this.destinationFromFile(file)));
         }
         Promise.all(promises).then(() => {
           resolve();

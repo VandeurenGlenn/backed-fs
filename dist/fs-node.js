@@ -109,8 +109,7 @@ var Fs = function () {
             for (var _iterator2 = files[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
               var file = _step2.value;
               file.dest = path.win32.normalize(dest);
-              var destination = _this2.destinationFromFile(file);
-              promises.push(_this2.write(file, file.destination));
+              promises.push(_this2.write(file, _this2.destinationFromFile(file)));
             }
           } catch (err) {
             _didIteratorError2 = true;
