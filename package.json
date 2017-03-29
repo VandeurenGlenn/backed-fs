@@ -1,0 +1,16 @@
+{
+  "name": "backed-fs",
+  "version": "1.0.0",
+  "main": "dist/fs-node.js",
+  "module": "dist/fs-es.js",
+  "license": "MIT",
+  "dependencies": {
+    "backed-logger": "^1.0.1",
+    "vinyl-read": "^1.0.0"
+  },
+  "devDependencies": {
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-es2016": "^6.22.0"
+  }
+}

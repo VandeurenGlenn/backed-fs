@@ -1,0 +1,41 @@
+{
+  "bundles": [
+    {
+      "src": "src/fs.js",
+      "dest": "dist/fs.js",
+      "format": "es",
+      "plugins": {
+        "babel": {
+          "presets": [
+            "es2016"
+          ],
+          "plugins": [
+            "external-helpers"
+          ]
+        }
+      }
+    }, {
+      "src": "src/fs.js",
+      "dest": "dist/fs.js",
+      "format": "cjs",
+      "plugins": {
+        "babel": {
+          "presets": [
+            ["es2015",
+            {
+              "modules": false
+            }]
+          ],
+          "plugins": [
+            "external-helpers"
+          ]
+        }
+      }
+    }
+  ],
+  "sources": [{
+      "src": ["src/workers/*.js"],
+      "dest": "dist"
+    }
+  ]
+}
