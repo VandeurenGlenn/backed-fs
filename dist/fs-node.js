@@ -66,11 +66,9 @@ var Fs = function () {
               }
             }
             Promise.all(promises).then(function () {
-              logger.succes(global.config.name + '::copy finished');
               resolve();
             });
           } catch (error) {
-            logger.error(error);
             reject(error);
           }
         }

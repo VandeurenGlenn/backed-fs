@@ -12,11 +12,9 @@ class Fs {
             promises.push(this.copy(source.src, source.dest));
           }
           Promise.all(promises).then(() => {
-            logger.succes(`${global.config.name}::copy finished`);
             resolve();
           });
         } catch (error) {
-          logger.error(error);
           reject(error);
         }
       }
