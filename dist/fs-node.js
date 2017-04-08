@@ -1,5 +1,32 @@
 'use strict';
 
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var path = _interopDefault(require('path'));
+var os = require('os');
+
+var onPlatform = os.platform();
+var posix = void 0;
+if (onPlatform === 'win32') {
+  posix = 'win32';
+} else {
+  posix = 'posix';
+}
+var parse = function parse(src) {
+  return path[posix].parse(src);
+};
+var basename = function basename(src) {
+  return path[posix].basename(src);
+};
+var dirname = function dirname(src) {
+  return path[posix].dirname(src);
+};
+var platformPath = {
+  parse: parse,
+  basename: basename,
+  dirname: dirname
+};
+
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -28,7 +55,7 @@ var _require = require('fs');
 var writeFile = _require.writeFile;
 var mkdir = _require.mkdir;
 var vinylRead = require('vinyl-read');
-var path = require('path');
+var path$1 = require('path');
 var logger = require('backed-logger');
 var Fs = function () {
   function Fs() {
@@ -77,16 +104,16 @@ var Fs = function () {
   }, {
     key: 'destinationFromFile',
     value: function destinationFromFile(file) {
-      var dest = path.win32.parse(file.path).dir;
+      var dest = platformPath.parse(file.path).dir;
       dest = dest.replace(process.cwd() + '\\', '');
-      dest = dest.split(path.sep);
-      if (dest.length > 1) {
+      dest = dest.split(path$1.sep);
+      if (dest.length < 0) {
         dest[0] = file.dest;
       } else {
-        dest[0] = file.dest;
+        dest.push(file.dest);
       }
-      dest.push(path.win32.basename(file.path));
-      dest = dest.toString().replace(/,/g, '\\');
+      dest.push(platformPath.basename(file.path));
+      dest = dest.toString().replace(/,/g, '/');
       return dest;
     }
   }, {
@@ -106,7 +133,7 @@ var Fs = function () {
           try {
             for (var _iterator2 = files[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
               var file = _step2.value;
-              file.dest = path.win32.normalize(dest);
+              file.dest = dest;
               promises.push(_this2.write(file, _this2.destinationFromFile(file)));
             }
           } catch (err) {
@@ -140,8 +167,8 @@ var Fs = function () {
               if (global.debug) {
                 logger.warn('subdirectory(s)::not existing\n                  Backed will now try to create ' + destination);
               }
-              var dest = path.win32.dirname(destination);
-              var paths = dest.split('\\');
+              var dest = platformPath.dirname(destination);
+              var paths = dest.split('/');
               var prepath = '';
               var _iteratorNormalCompletion3 = true;
               var _didIteratorError3 = false;
@@ -149,14 +176,16 @@ var Fs = function () {
               try {
                 for (var _iterator3 = paths[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
                   var _path = _step3.value;
-                  prepath += _path + '\\';
-                  mkdir(process.cwd() + '\\' + prepath, function (err) {
-                    if (err) {
-                      if (err.code !== 'EEXIST') {
-                        reject(err);
+                  prepath += _path + '/';
+                  if (_path.length > 2) {
+                    mkdir(prepath, function (err) {
+                      if (err) {
+                        if (err.code !== 'EEXIST') {
+                          reject(err);
+                        }
                       }
-                    }
-                  });
+                    });
+                  }
                 }
               } catch (err) {
                 _didIteratorError3 = true;
@@ -172,7 +201,7 @@ var Fs = function () {
                   }
                 }
               }
-              _this3.write(file).then(function () {
+              _this3.write(file, destination).then(function () {
                 resolve();
               });
             } else {

@@ -1,6 +1,6 @@
 {
   "name": "backed-fs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/fs-node.js",
   "module": "dist/fs-es.js",
   "license": "MIT",

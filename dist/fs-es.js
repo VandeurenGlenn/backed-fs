@@ -1,6 +1,31 @@
+import path from 'path';
+import { platform } from 'os';
+
+const onPlatform = platform();
+let posix;
+if (onPlatform === 'win32') {
+  posix = 'win32';
+} else {
+  posix = 'posix';
+}
+const parse = src => {
+  return path[posix].parse(src);
+};
+const basename = src => {
+  return path[posix].basename(src);
+};
+const dirname = src => {
+  return path[posix].dirname(src);
+};
+var platformPath = {
+  parse: parse,
+  basename: basename,
+  dirname: dirname
+};
+
 const { writeFile, mkdir } = require('fs');
 const vinylRead = require('vinyl-read');
-const path = require('path');
+const path$1 = require('path');
 const logger = require('backed-logger');
 class Fs {
   copySources(sources = []) {
@@ -21,16 +46,16 @@ class Fs {
     });
   }
   destinationFromFile(file) {
-    let dest = path.win32.parse(file.path).dir;
+    let dest = platformPath.parse(file.path).dir;
     dest = dest.replace(`${process.cwd()}\\`, '');
-    dest = dest.split(path.sep);
-    if (dest.length > 1) {
+    dest = dest.split(path$1.sep);
+    if (dest.length < 0) {
       dest[0] = file.dest;
     } else {
-      dest[0] = file.dest;
+      dest.push(file.dest);
     }
-    dest.push(path.win32.basename(file.path));
-    dest = dest.toString().replace(/,/g, '\\');
+    dest.push(platformPath.basename(file.path));
+    dest = dest.toString().replace(/,/g, '/');
     return dest;
   }
   copy(src = null, dest = null) {
@@ -40,7 +65,7 @@ class Fs {
         cwd: process.cwd()
       }).then(files => {
         for (let file of files) {
-          file.dest = path.win32.normalize(dest);
+          file.dest = dest;
           promises.push(this.write(file, this.destinationFromFile(file)));
         }
         Promise.all(promises).then(() => {
@@ -58,20 +83,22 @@ class Fs {
               logger.warn(`subdirectory(s)::not existing
                   Backed will now try to create ${destination}`);
             }
-            const dest = path.win32.dirname(destination);
-            const paths = dest.split('\\');
+            const dest = platformPath.dirname(destination);
+            const paths = dest.split('/');
             let prepath = '';
-            for (let path of paths) {
-              prepath += `${path}\\`;
-              mkdir(process.cwd() + '\\' + prepath, err => {
-                if (err) {
-                  if (err.code !== 'EEXIST') {
-                    reject(err);
+            for (let path$$1 of paths) {
+              prepath += `${path$$1}/`;
+              if (path$$1.length > 2) {
+                mkdir(prepath, err => {
+                  if (err) {
+                    if (err.code !== 'EEXIST') {
+                      reject(err);
+                    }
                   }
-                }
-              });
+                });
+              }
             }
-            this.write(file).then(() => {
+            this.write(file, destination).then(() => {
               resolve();
             });
           } else {
