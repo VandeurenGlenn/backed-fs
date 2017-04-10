@@ -31,15 +31,11 @@ class Fs {
    * returns a destination using [vinyl](https://github.com/gulpjs/vinyl) info
    */
   destinationFromFile(file) {
-    let dest = platformPath.parse(file.path).dir;
-    dest = dest.replace(`${process.cwd()}\\`, '');
+    let dest = path.win32.relative(process.cwd(), file.path);
     dest = dest.split(path.sep);
-    if (dest.length < 0) {
+    if (dest.length > 0) {
       dest[0] = file.dest;
-    } else {
-      dest.push(file.dest);
     }
-    dest.push(platformPath.basename(file.path));
     dest = dest.toString().replace(/,/g, '/');
     return dest;
   }
