@@ -104,15 +104,11 @@ var Fs = function () {
   }, {
     key: 'destinationFromFile',
     value: function destinationFromFile(file) {
-      var dest = platformPath.parse(file.path).dir;
-      dest = dest.replace(process.cwd() + '\\', '');
+      var dest = path$1.win32.relative(process.cwd(), file.path);
       dest = dest.split(path$1.sep);
-      if (dest.length < 0) {
+      if (dest.length > 0) {
         dest[0] = file.dest;
-      } else {
-        dest.push(file.dest);
       }
-      dest.push(platformPath.basename(file.path));
       dest = dest.toString().replace(/,/g, '/');
       return dest;
     }
