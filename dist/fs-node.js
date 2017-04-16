@@ -21,10 +21,14 @@ var basename = function basename(src) {
 var dirname = function dirname(src) {
   return path[posix].dirname(src);
 };
+var relative = function relative(from, against) {
+  return path[posix].relative(from, against);
+};
 var platformPath = {
   parse: parse,
   basename: basename,
-  dirname: dirname
+  dirname: dirname,
+  relative: relative
 };
 
 var classCallCheck = function (instance, Constructor) {

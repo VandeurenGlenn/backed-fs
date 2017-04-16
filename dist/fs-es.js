@@ -17,10 +17,14 @@ const basename = src => {
 const dirname = src => {
   return path[posix].dirname(src);
 };
+const relative = (from, against) => {
+  return path[posix].relative(from, against);
+};
 var platformPath = {
   parse: parse,
   basename: basename,
-  dirname: dirname
+  dirname: dirname,
+  relative: relative
 };
 
 const { writeFile, mkdir } = require('fs');
