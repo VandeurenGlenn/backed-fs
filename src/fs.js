@@ -31,7 +31,7 @@ class Fs {
    * returns a destination using [vinyl](https://github.com/gulpjs/vinyl) info
    */
   destinationFromFile(file) {
-    let dest = path.win32.relative(process.cwd(), file.path);
+    let dest = platformPath.relative(process.cwd(), file.path);
     dest = dest.split(path.sep);
     if (dest.length > 0) {
       dest[0] = file.dest;

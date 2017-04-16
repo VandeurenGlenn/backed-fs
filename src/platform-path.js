@@ -23,6 +23,10 @@ const dirname = src => {
   return path[posix].dirname(src);
 }
 
+const relative = (from, against) => {
+  return path[posix].relative(from, against);
+}
+
 export default {
   parse: parse,
   basename: basename,
