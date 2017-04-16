@@ -46,7 +46,7 @@ class Fs {
     });
   }
   destinationFromFile(file) {
-    let dest = path$1.win32.relative(process.cwd(), file.path);
+    let dest = platformPath.relative(process.cwd(), file.path);
     dest = dest.split(path$1.sep);
     if (dest.length > 0) {
       dest[0] = file.dest;

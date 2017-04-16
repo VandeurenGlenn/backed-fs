@@ -104,7 +104,7 @@ var Fs = function () {
   }, {
     key: 'destinationFromFile',
     value: function destinationFromFile(file) {
-      var dest = path$1.win32.relative(process.cwd(), file.path);
+      var dest = platformPath.relative(process.cwd(), file.path);
       dest = dest.split(path$1.sep);
       if (dest.length > 0) {
         dest[0] = file.dest;
