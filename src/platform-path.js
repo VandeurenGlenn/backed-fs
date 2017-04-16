@@ -30,5 +30,6 @@ const relative = (from, against) => {
 export default {
   parse: parse,
   basename: basename,
-  dirname: dirname
+  dirname: dirname,
+  relative: relative
 }
